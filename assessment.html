@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sozo Skills - Assessment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.95; }
+        .content { padding: 40px; }
+        .welcome-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .welcome-box h2 { color: #667eea; margin-bottom: 15px; }
+        .welcome-box p { color: #555; line-height: 1.6; }
+        .applicant-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        .applicant-info h3 { color: #667eea; margin-bottom: 15px; }
+        .info-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { font-weight: 600; color: #555; }
+        .info-value { color: #333; }
+        .assessment-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+        .assessment-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .question-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .question-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        .required { color: #e74c3c; }
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .option-card {
+            background: white;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .option-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+        .option-card input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .option-card.selected {
+            border-color: #667eea;
+            background: #f0f3ff;
+        }
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .likert-option {
+            flex: 1;
+            text-align: center;
+        }
+        .likert-option input[type="radio"] {
+            display: none;
+        }
+        .likert-option label {
+            display: block;
+            padding: 15px 10px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .likert-option input[type="radio"]:checked + label {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .likert-option label:hover {
+            border-color: #667eea;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+            margin-bottom: 20px;
+        }
+        .info-box p {
+            color: #1565c0;
+            margin: 0;
+        }
+        @media (max-width: 768px) {
+            .content { padding: 20px; }
+            .info-row { grid-template-columns: 1fr; gap: 5px; }
+            .info-label { font-weight: 700; }
+            .options-grid { grid-template-columns: 1fr; }
+            .likert-scale { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 Pre-Training Assessment</h1>
+            <p>Baseline Knowledge & Skills Evaluation</p>
+        </div>
+
+        <div class="content">
+            <div class="welcome-box">
+                <h2>Welcome to Your Assessment!</h2>
+                <p>Thank you for submitting your application. This assessment will help us understand your current knowledge and skills so we can provide you with the best possible training experience. Please answer all questions honestly - there are no right or wrong answers.</p>
+            </div>
+
+            <div class="applicant-info" id="applicantInfo">
+                <h3>📋 Your Application Details</h3>
+                <div id="infoContent"></div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+
+            <form id="assessmentForm">
+                <!-- Section 1: Technical Knowledge -->
+                <div class="assessment-section">
+                    <h2>1️⃣ Technical Knowledge (Program-Specific)</h2>
+                    <div class="info-box">
+                        <p>💡 These questions relate to your chosen training program. Answer based on your current knowledge.</p>
+                    </div>
+
+                    <div class="question-group">
+                        <label>How would you rate your current knowledge in your chosen field? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="knowledge1" name="technicalKnowledge" value="1" required>
+                                <label for="knowledge1">No Knowledge</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="knowledge2" name="technicalKnowledge" value="2">
+                                <label for="knowledge2">Basic</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="knowledge3" name="technicalKnowledge" value="3">
+                                <label for="knowledge3">Moderate</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="knowledge4" name="technicalKnowledge" value="4">
+                                <label for="knowledge4">Good</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="knowledge5" name="technicalKnowledge" value="5">
+                                <label for="knowledge5">Excellent</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Have you ever used professional tools or equipment in this field? <span class="required">*</span></label>
+                        <div class="options-grid">
+                            <div class="option-card">
+                                <input type="radio" id="tools1" name="toolsExperience" value="Never" required>
+                                <label for="tools1">Never</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="tools2" name="toolsExperience" value="Rarely">
+                                <label for="tools2">Rarely</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="tools3" name="toolsExperience" value="Sometimes">
+                                <label for="tools3">Sometimes</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="tools4" name="toolsExperience" value="Often">
+                                <label for="tools4">Often</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>List any techniques or skills you already know in this field:</label>
+                        <textarea id="existingSkills" name="existingSkills" placeholder="Example: Basic bread baking, hair washing, making cappuccino, etc. (Write 'None' if you have no prior skills)"></textarea>
+                    </div>
+                </div>
+
+                <!-- Section 2: Practical Skills -->
+                <div class="assessment-section">
+                    <h2>2️⃣ Practical & Life Skills</h2>
+
+                    <div class="question-group">
+                        <label>How confident are you in following written instructions? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="instructions1" name="followInstructions" value="1" required>
+                                <label for="instructions1">Not Confident</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="instructions2" name="followInstructions" value="2">
+                                <label for="instructions2">Slightly</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="instructions3" name="followInstructions" value="3">
+                                <label for="instructions3">Moderately</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="instructions4" name="followInstructions" value="4">
+                                <label for="instructions4">Very</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="instructions5" name="followInstructions" value="5">
+                                <label for="instructions5">Extremely</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>How would you rate your time management skills? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="time1" name="timeManagement" value="1" required>
+                                <label for="time1">Poor</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="time2" name="timeManagement" value="2">
+                                <label for="time2">Fair</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="time3" name="timeManagement" value="3">
+                                <label for="time3">Good</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="time4" name="timeManagement" value="4">
+                                <label for="time4">Very Good</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="time5" name="timeManagement" value="5">
+                                <label for="time5">Excellent</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>How comfortable are you working in a team? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="team1" name="teamwork" value="1" required>
+                                <label for="team1">Not Comfortable</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="team2" name="teamwork" value="2">
+                                <label for="team2">Slightly</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="team3" name="teamwork" value="3">
+                                <label for="team3">Moderately</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="team4" name="teamwork" value="4">
+                                <label for="team4">Very</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="team5" name="teamwork" value="5">
+                                <label for="team5">Extremely</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Communication Skills -->
+                <div class="assessment-section">
+                    <h2>3️⃣ Communication Skills</h2>
+
+                    <div class="question-group">
+                        <label>How confident are you speaking to customers or clients? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="customer1" name="customerCommunication" value="1" required>
+                                <label for="customer1">Not Confident</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="customer2" name="customerCommunication" value="2">
+                                <label for="customer2">Slightly</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="customer3" name="customerCommunication" value="3">
+                                <label for="customer3">Moderately</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="customer4" name="customerCommunication" value="4">
+                                <label for="customer4">Very</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="customer5" name="customerCommunication" value="5">
+                                <label for="customer5">Extremely</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>What languages can you speak fluently? <span class="required">*</span></label>
+                        <textarea id="languages" name="languages" required placeholder="Example: English, Afrikaans, isiXhosa, etc."></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>How comfortable are you asking for help when you don't understand something? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="help1" name="askingHelp" value="1" required>
+                                <label for="help1">Very Uncomfortable</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="help2" name="askingHelp" value="2">
+                                <label for="help2">Uncomfortable</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="help3" name="askingHelp" value="3">
+                                <label for="help3">Neutral</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="help4" name="askingHelp" value="4">
+                                <label for="help4">Comfortable</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="help5" name="askingHelp" value="5">
+                                <label for="help5">Very Comfortable</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Digital Literacy -->
+                <div class="assessment-section">
+                    <h2>4️⃣ Digital Literacy</h2>
+
+                    <div class="question-group">
+                        <label>Do you own a smartphone? <span class="required">*</span></label>
+                        <div class="options-grid">
+                            <div class="option-card">
+                                <input type="radio" id="phone1" name="smartphone" value="Yes" required>
+                                <label for="phone1">Yes</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="phone2" name="smartphone" value="No">
+                                <label for="phone2">No</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="phone3" name="smartphone" value="Sometimes have access">
+                                <label for="phone3">Sometimes have access</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>How comfortable are you using social media (WhatsApp, Facebook, Instagram)? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="social1" name="socialMedia" value="1" required>
+                                <label for="social1">Not Comfortable</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="social2" name="socialMedia" value="2">
+                                <label for="social2">Slightly</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="social3" name="socialMedia" value="3">
+                                <label for="social3">Moderately</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="social4" name="socialMedia" value="4">
+                                <label for="social4">Very</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="social5" name="socialMedia" value="5">
+                                <label for="social5">Extremely</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Have you ever used a computer or laptop? <span class="required">*</span></label>
+                        <div class="options-grid">
+                            <div class="option-card">
+                                <input type="radio" id="computer1" name="computerUse" value="Never" required>
+                                <label for="computer1">Never</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="computer2" name="computerUse" value="Rarely">
+                                <label for="computer2">Rarely</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="computer3" name="computerUse" value="Sometimes">
+                                <label for="computer3">Sometimes</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="computer4" name="computerUse" value="Regularly">
+                                <label for="computer4">Regularly</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Work Readiness -->
+                <div class="assessment-section">
+                    <h2>5️⃣ Work Readiness & Attitude</h2>
+
+                    <div class="question-group">
+                        <label>How important is it for you to gain employment after this training? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="employment1" name="employmentImportance" value="1" required>
+                                <label for="employment1">Not Important</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="employment2" name="employmentImportance" value="2">
+                                <label for="employment2">Slightly</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="employment3" name="employmentImportance" value="3">
+                                <label for="employment3">Moderately</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="employment4" name="employmentImportance" value="4">
+                                <label for="employment4">Very</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="employment5" name="employmentImportance" value="5">
+                                <label for="employment5">Extremely</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Are you interested in starting your own business in this field? <span class="required">*</span></label>
+                        <div class="options-grid">
+                            <div class="option-card">
+                                <input type="radio" id="business1" name="businessInterest" value="Yes, definitely" required>
+                                <label for="business1">Yes, definitely</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="business2" name="businessInterest" value="Maybe in the future">
+                                <label for="business2">Maybe in the future</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="business3" name="businessInterest" value="No, prefer employment">
+                                <label for="business3">No, prefer employment</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="business4" name="businessInterest" value="Not sure yet">
+                                <label for="business4">Not sure yet</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>How committed are you to completing this training program? <span class="required">*</span></label>
+                        <div class="likert-scale">
+                            <div class="likert-option">
+                                <input type="radio" id="commit1" name="commitment" value="1" required>
+                                <label for="commit1">Not Committed</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="commit2" name="commitment" value="2">
+                                <label for="commit2">Slightly</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="commit3" name="commitment" value="3">
+                                <label for="commit3">Moderately</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="commit4" name="commitment" value="4">
+                                <label for="commit4">Very</label>
+                            </div>
+                            <div class="likert-option">
+                                <input type="radio" id="commit5" name="commitment" value="5">
+                                <label for="commit5">Extremely</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-group">
+                        <label>What do you hope to achieve after completing this training? <span class="required">*</span></label>
+                        <textarea id="goals" name="goals" required placeholder="Tell us about your career goals and what you hope to achieve..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Section 6: Challenges & Support -->
+                <div class="assessment-section">
+                    <h2>6️⃣ Potential Challenges & Support Needs</h2>
+
+                    <div class="question-group">
+                        <label>What challenges do you think might affect your ability to attend training regularly? <span class="required">*</span></label>
+                        <textarea id="challenges" name="challenges" required placeholder="Example: Transportation, childcare, financial constraints, etc."></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>What type of support would be most helpful for you during training?</label>
+                        <textarea id="supportNeeds" name="supportNeeds" placeholder="Example: Transport assistance, study materials, mentorship, etc."></textarea>
+                    </div>
+
+                    <div class="question-group">
+                        <label>Do you have family/community support for attending this training? <span class="required">*</span></label>
+                        <div class="options-grid">
+                            <div class="option-card">
+                                <input type="radio" id="support1" name="familySupport" value="Yes, strong support" required>
+                                <label for="support1">Yes, strong support</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="support2" name="familySupport" value="Some support">
+                                <label for="support2">Some support</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="support3" name="familySupport" value="Limited support">
+                                <label for="support3">Limited support</label>
+                            </div>
+                            <div class="option-card">
+                                <input type="radio" id="support4" name="familySupport" value="No support">
+                                <label for="support4">No support</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Complete Assessment & Submit →</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Load applicant information
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentAppId = localStorage.getItem('currentApplicationId');
+            const applications = JSON.parse(localStorage.getItem('sozoApplications')) || [];
+            const application = applications.find(app => app.id === currentAppId);
+
+            if (!application) {
+                alert('No application found. Redirecting to application form.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Display applicant info
+            const infoContent = document.getElementById('infoContent');
+            infoContent.innerHTML = `
+                <div class="info-row">
+                    <div class="info-label">Name:</div>
+                    <div class="info-value">$${application.firstName}$$ {application.lastName}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Program:</div>
+                    <div class="info-value">${application.program}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Age:</div>
+                    <div class="info-value">${application.age} years</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Area:</div>
+                    <div class="info-value">${application.area}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Application Date:</div>
+                    <div class="info-value">${new Date(application.submissionDate).toLocaleDateString()}</div>
+                </div>
+            `;
+        });
+
+        // Add click handlers for option cards
+        document.querySelectorAll('.option-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Remove selected class from siblings
+                const siblings = this.parentElement.querySelectorAll('.option-card');
+                siblings.forEach(sib => sib.classList.remove('selected'));
+                this.classList.add('selected');
+                updateProgress();
+            });
+        });
+
+        // Update progress bar
+        function updateProgress() {
+            const form = document.getElementById('assessmentForm');
+            const requiredInputs = form.querySelectorAll('[required]');
+            let completed = 0;
+
+            requiredInputs.forEach(input => {
+                if (input.type === 'radio') {
+                    const radioGroup = form.querySelectorAll(`[name="${input.name}"]`);
+                    if (Array.from(radioGroup).some(radio => radio.checked)) {
+                        completed++;
+                    }
+                } else if (input.value.trim() !== '') {
+                    completed++;
+                }
+            });
+
+            // Get unique required field names to avoid counting radio groups multiple times
+            const uniqueRequired = new Set();
+            requiredInputs.forEach(input => {
+                if (input.type === 'radio') {
+                    uniqueRequired.add(input.name);
+                } else {
+                    uniqueRequired.add(input.id);
+                }
+            });
+
+            const total = uniqueRequired.size;
+            const percentage = (completed / total) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        // Add change listeners to all inputs
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('change', updateProgress);
+            input.addEventListener('input', updateProgress);
+        });
+
+        // Form submission
+        document.getElementById('assessmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const currentAppId = localStorage.getItem('currentApplicationId');
+            const applications = JSON.parse(localStorage.getItem('sozoApplications')) || [];
+            const appIndex = applications.findIndex(app => app.id === currentAppId);
+
+            if (appIndex === -1) {
+                alert('Error: Application not found');
+                return;
+            }
+
+            // Collect assessment data
+            const assessmentData = {
+                technicalKnowledge: document.querySelector('input[name="technicalKnowledge"]:checked').value,
+                toolsExperience: document.querySelector('input[name="toolsExperience"]:checked').value,
+                existingSkills: document.getElementById('existingSkills').value,
+                followInstructions: document.querySelector('input[name="followInstructions"]:checked').value,
+                timeManagement: document.querySelector('input[name="timeManagement"]:checked').value,
+                teamwork: document.querySelector('input[name="teamwork"]:checked').value,
+                customerCommunication: document.querySelector('input[name="customerCommunication"]:checked').value,
+                languages: document.getElementById('languages').value,
+                askingHelp: document.querySelector('input[name="askingHelp"]:checked').value,
+                smartphone: document.querySelector('input[name="smartphone"]:checked').value,
+                socialMedia: document.querySelector('input[name="socialMedia"]:checked').value,
+                computerUse: document.querySelector('input[name="computerUse"]:checked').value,
+                employmentImportance: document.querySelector('input[name="employmentImportance"]:checked').value,
+                businessInterest: document.querySelector('input[name="businessInterest"]:checked').value,
+                commitment: document.querySelector('input[name="commitment"]:checked').value,
+                goals: document.getElementById('goals').value,
+                challenges: document.getElementById('challenges').value,
+                supportNeeds: document.getElementById('supportNeeds').value,
+                familySupport: document.querySelector('input[name="familySupport"]:checked').value,
+                assessmentDate: new Date().toISOString(),
+                assessmentCompleted: true
+            };
+
+            // Calculate baseline score
+            const numericScores = [
+                parseInt(assessmentData.technicalKnowledge),
+                parseInt(assessmentData.followInstructions),
+                parseInt(assessmentData.timeManagement),
+                parseInt(assessmentData.teamwork),
+                parseInt(assessmentData.customerCommunication),
+                parseInt(assessmentData.askingHelp),
+                parseInt(assessmentData.socialMedia),
+                parseInt(assessmentData.employmentImportance),
+                parseInt(assessmentData.commitment)
+            ];
+
+            const averageScore = (numericScores.reduce((a, b) => a + b, 0) / numericScores.length).toFixed(2);
+            assessmentData.baselineScore = averageScore;
+
+            // Update application with assessment data
+            applications[appIndex].assessment = assessmentData;
+            applications[appIndex].assessmentCompleted = true;
+            applications[appIndex].baselineScore = averageScore;
+            applications[appIndex].applicationStatus = 'Assessment Completed - Pending Review';
+
+            localStorage.setItem('sozoApplications', JSON.stringify(applications));
+
+            // Redirect to thank you page
+            window.location.href = 'thankyou.html';
+        });
+
+        // Initial progress update
+        updateProgress();
+    </script>
+</body>
+</html>

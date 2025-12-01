@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sozo Skills - Application Form</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.95; }
+        .form-container { padding: 40px; }
+        .form-section { margin-bottom: 35px; }
+        .form-section h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        .required { color: #e74c3c; }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        .radio-group { display: flex; flex-direction: column; gap: 10px; }
+        .radio-item { display: flex; align-items: center; gap: 10px; }
+        .radio-item input[type="radio"] { width: 18px; height: 18px; cursor: pointer; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; }
+        .checkbox-item input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        .help-text { font-size: 0.9em; color: #666; margin-top: 5px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .age-display { font-size: 0.9em; margin-top: 5px; font-weight: 600; }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+        }
+        .modal-content h2 { color: #e74c3c; margin-bottom: 15px; }
+        .modal-content p { font-size: 1.1em; color: #333; margin-bottom: 20px; }
+        .btn-modal {
+            background: #667eea;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .header h1 { font-size: 1.8em; }
+            .form-container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Sozo Skills Vocational Training</h1>
+            <p>Application Form - Empowering Youth Through Skills Development</p>
+        </div>
+
+        <div class="form-container">
+            <form id="applicationForm">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h2>📋 Personal Information</h2>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>First Name <span class="required">*</span></label>
+                            <input type="text" id="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name <span class="required">*</span></label>
+                            <input type="text" id="lastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>South African ID Number <span class="required">*</span></label>
+                        <input type="text" id="idNumber" maxlength="13" pattern="[0-9]{13}" required>
+                        <div class="help-text">Enter your 13-digit SA ID number</div>
+                        <div id="ageDisplay" class="age-display"></div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Date of Birth <span class="required">*</span></label>
+                            <input type="date" id="dob" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gender <span class="required">*</span></label>
+                            <select id="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Non-binary">Non-binary</option>
+                                <option value="Prefer not to say">Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Race/Ethnicity <span class="required">*</span></label>
+                        <select id="race" required>
+                            <option value="">Select Race/Ethnicity</option>
+                            <option value="Black African">Black African</option>
+                            <option value="Coloured">Coloured</option>
+                            <option value="Indian/Asian">Indian/Asian</option>
+                            <option value="White">White</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Disability Status</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="disabilityNo" name="disability" value="No" checked>
+                                <label for="disabilityNo">No disability</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="disabilityYes" name="disability" value="Yes">
+                                <label for="disabilityYes">Yes, I have a disability</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="disabilityTypeGroup" style="display: none;">
+                        <label>Type of Disability <span class="required">*</span></label>
+                        <input type="text" id="disabilityType">
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="form-section">
+                    <h2>📞 Contact Information</h2>
+
+                    <div class="form-group">
+                        <label>Mobile Number <span class="required">*</span></label>
+                        <input type="tel" id="mobile" pattern="[0-9]{10}" required>
+                        <div class="help-text">10-digit number (e.g., 0821234567)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Alternative Contact Number</label>
+                        <input type="tel" id="altMobile" pattern="[0-9]{10}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Residential Area <span class="required">*</span></label>
+                        <select id="area" required>
+                            <option value="">Select Your Area</option>
+                            <optgroup label="✓ Eligible Areas">
+                                <option value="Vrygrond">Vrygrond</option>
+                                <option value="Muizenberg">Muizenberg</option>
+                                <option value="Lakeside">Lakeside</option>
+                                <option value="Marina da Gama">Marina da Gama</option>
+                                <option value="Capricorn">Capricorn</option>
+                                <option value="Clovelly">Clovelly</option>
+                                <option value="Fish Hoek">Fish Hoek</option>
+                                <option value="Kalk Bay">Kalk Bay</option>
+                                <option value="St James">St James</option>
+                                <option value="Glencairn">Glencairn</option>
+                                <option value="Simon's Town">Simon's Town</option>
+                                <option value="Ocean View">Ocean View</option>
+                                <option value="Masiphumelele">Masiphumelele</option>
+                                <option value="Kommetjie">Kommetjie</option>
+                                <option value="Scarborough">Scarborough</option>
+                                <option value="Noordhoek">Noordhoek</option>
+                                <option value="Sun Valley">Sun Valley</option>
+                                <option value="Steenberg">Steenberg</option>
+                                <option value="Retreat">Retreat</option>
+                                <option value="Lavender Hill">Lavender Hill</option>
+                                <option value="Grassy Park">Grassy Park</option>
+                                <option value="Lotus River">Lotus River</option>
+                            </optgroup>
+                            <optgroup label="❌ Not Eligible">
+                                <option value="Other">Other Area</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Full Residential Address <span class="required">*</span></label>
+                        <textarea id="address" required></textarea>
+                    </div>
+                </div>
+
+                <!-- Educational Background -->
+                <div class="form-section">
+                    <h2>🎓 Educational Background</h2>
+
+                    <div class="form-group">
+                        <label>Highest Level of Education <span class="required">*</span></label>
+                        <select id="education" required>
+                            <option value="">Select Education Level</option>
+                            <option value="No formal education">No formal education</option>
+                            <option value="Primary school">Primary school (Grade 1-7)</option>
+                            <option value="Some high school">Some high school (Grade 8-11)</option>
+                            <option value="Matric/Grade 12">Matric/Grade 12</option>
+                            <option value="Post-matric certificate">Post-matric certificate</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="Degree">Degree</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Employment Status <span class="required">*</span></label>
+                        <select id="employmentStatus" required>
+                            <option value="">Select Status</option>
+                            <option value="Unemployed">Unemployed</option>
+                            <option value="Employed full-time">Employed full-time</option>
+                            <option value="Employed part-time">Employed part-time</option>
+                            <option value="Self-employed">Self-employed</option>
+                            <option value="Student">Student</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Monthly Household Income <span class="required">*</span></label>
+                        <select id="income" required>
+                            <option value="">Select Income Range</option>
+                            <option value="R0 - R1,000">R0 - R1,000</option>
+                            <option value="R1,001 - R2,500">R1,001 - R2,500</option>
+                            <option value="R2,501 - R5,000">R2,501 - R5,000</option>
+                            <option value="R5,001 - R10,000">R5,001 - R10,000</option>
+                            <option value="R10,001 - R20,000">R10,001 - R20,000</option>
+                            <option value="Above R20,000">Above R20,000</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Number of Dependents</label>
+                        <input type="number" id="dependents" min="0" value="0">
+                    </div>
+                </div>
+
+                <!-- Program Selection -->
+                <div class="form-section">
+                    <h2>🎯 Program Selection</h2>
+
+                    <div class="form-group">
+                        <label>Select Training Program <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="artisanBaking" name="program" value="Artisan Baking" required>
+                                <label for="artisanBaking"><strong>🍞 Artisan Baking</strong> - Professional baking techniques</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="barista" name="program" value="Barista" required>
+                                <label for="barista"><strong>☕ Barista</strong> - Coffee preparation & café service</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="hair" name="program" value="Hair" required>
+                                <label for="hair"><strong>💇 Hair</strong> - Professional hairdressing</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="beauty" name="program" value="Beauty" required>
+                                <label for="beauty"><strong>💄 Beauty</strong> - Beauty therapy</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Why do you want to join this program? <span class="required">*</span></label>
+                        <textarea id="motivation" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you have previous experience in this field?</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="experienceNo" name="experience" value="No" checked>
+                                <label for="experienceNo">No</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="experienceYes" name="experience" value="Yes">
+                                <label for="experienceYes">Yes</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="experienceDetailsGroup" style="display: none;">
+                        <label>Describe your experience <span class="required">*</span></label>
+                        <textarea id="experienceDetails"></textarea>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <h2>ℹ️ Additional Information</h2>
+
+                    <div class="form-group">
+                        <label>How did you hear about Sozo Skills? <span class="required">*</span></label>
+                        <select id="referralSource" required>
+                            <option value="">Select Option</option>
+                            <option value="Social Media">Social Media</option>
+                            <option value="Friend/Family">Friend/Family</option>
+                            <option value="Community Notice Board">Community Notice Board</option>
+                            <option value="NGO/Organization">NGO/Organization</option>
+                            <option value="Previous Participant">Previous Participant</option>
+                            <option value="Radio">Radio</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Do you have access to transportation?</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" id="transportYes" name="transport" value="Yes">
+                                <label for="transportYes">Yes</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" id="transportNo" name="transport" value="No" checked>
+                                <label for="transportNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Special requirements or needs?</label>
+                        <textarea id="specialRequirements"></textarea>
+                    </div>
+                </div>
+
+                <!-- Declaration -->
+                <div class="form-section">
+                    <h2>✅ Declaration</h2>
+
+                    <div class="form-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="declaration" required>
+                            <label for="declaration">I declare that the information provided is true and accurate. <span class="required">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="consent" required>
+                            <label for="consent">I consent to Sozo Skills processing my personal information. <span class="required">*</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Submit Application →</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="ineligibilityModal" class="modal">
+        <div class="modal-content">
+            <h2>⚠️ Application Requirement Not Met</h2>
+            <p id="modalMessage"></p>
+            <button class="btn-modal" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const eligibleAreas = ['Vrygrond', 'Muizenberg', 'Lakeside', 'Marina da Gama', 'Capricorn', 'Clovelly', 'Fish Hoek', 'Kalk Bay', 'St James', 'Glencairn', 'Simon\'s Town', 'Ocean View', 'Masiphumelele', 'Kommetjie', 'Scarborough', 'Noordhoek', 'Sun Valley', 'Steenberg', 'Retreat', 'Lavender Hill', 'Grassy Park', 'Lotus River'];
+
+        // Show/hide disability type
+        document.querySelectorAll('input[name="disability"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const group = document.getElementById('disabilityTypeGroup');
+                const input = document.getElementById('disabilityType');
+                if (this.value === 'Yes') {
+                    group.style.display = 'block';
+                    input.required = true;
+                } else {
+                    group.style.display = 'none';
+                    input.required = false;
+                    input.value = '';
+                }
+            });
+        });
+
+        // Show/hide experience details
+        document.querySelectorAll('input[name="experience"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const group = document.getElementById('experienceDetailsGroup');
+                const input = document.getElementById('experienceDetails');
+                if (this.value === 'Yes') {
+                    group.style.display = 'block';
+                    input.required = true;
+                } else {
+                    group.style.display = 'none';
+                    input.required = false;
+                    input.value = '';
+                }
+            });
+        });
+
+        // Calculate age from ID
+        document.getElementById('idNumber').addEventListener('input', function() {
+            const id = this.value;
+            if (id.length === 13 && /^\d+$/.test(id)) {
+                const year = id.substring(0, 2);
+                const month = id.substring(2, 4);
+                const day = id.substring(4, 6);
+                const currentYear = new Date().getFullYear();
+                const fullYear = (parseInt(year) <= parseInt(currentYear.toString().substring(2))) ? '20' + year : '19' + year;
+                const birthDate = new Date(fullYear, parseInt(month) - 1, parseInt(day));
+                const age = calculateAge(birthDate);
+                
+                const display = document.getElementById('ageDisplay');
+                if (age >= 16 && age <= 35) {
+                    display.textContent = `✓ Age: ${age} (Eligible)`;
+                    display.style.color = '#27ae60';
+                } else {
+                    display.textContent = `✗ Age: ${age} (Must be 16-35)`;
+                    display.style.color = '#e74c3c';
+                }
+                document.getElementById('dob').value = `$${fullYear}-$$ {month}-${day}`;
+            } else {
+                document.getElementById('ageDisplay').textContent = '';
+            }
+        });
+
+        function calculateAge(birthDate) {
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+            return age;
+        }
+
+        // Validate DOB
+        document.getElementById('dob').addEventListener('change', function() {
+            const age = calculateAge(new Date(this.value));
+            if (age < 16 || age > 35) {
+                showModal('Sorry, applicants must be between 16 and 35 years old.');
+                this.value = '';
+            }
+        });
+
+        // Validate area
+        document.getElementById('area').addEventListener('change', function() {
+            if (this.value === 'Other' || (this.value && !eligibleAreas.includes(this.value))) {
+                showModal('Sorry, this program is only available to residents of the Southern Suburbs of Cape Town.');
+                this.value = '';
+            }
+        });
+
+        function showModal(message) {
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('ineligibilityModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('ineligibilityModal').style.display = 'none';
+        }
+
+        // Form submission
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const age = calculateAge(new Date(document.getElementById('dob').value));
+            if (age < 16 || age > 35) {
+                showModal('Sorry, applicants must be between 16 and 35 years old.');
+                return;
+            }
+            
+            const area = document.getElementById('area').value;
+            if (!eligibleAreas.includes(area)) {
+                showModal('Sorry, you must be from an eligible area.');
+                return;
+            }
+            
+            const formData = {
+                id: 'APP-' + Date.now(),
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                idNumber: document.getElementById('idNumber').value,
+                dateOfBirth: document.getElementById('dob').value,
+                age: age,
+                gender: document.getElementById('gender').value,
+                race: document.getElementById('race').value,
+                disability: document.querySelector('input[name="disability"]:checked').value,
+                disabilityType: document.getElementById('disabilityType').value,
+                mobile: document.getElementById('mobile').value,
+                altMobile: document.getElementById('altMobile').value,
+                email: document.getElementById('email').value,
+                area: area,
+                address: document.getElementById('address').value,
+                education: document.getElementById('education').value,
+                employmentStatus: document.getElementById('employmentStatus').value,
+                income: document.getElementById('income').value,
+                dependents: document.getElementById('dependents').value,
+                program: document.querySelector('input[name="program"]:checked').value,
+                motivation: document.getElementById('motivation').value,
+                experience: document.querySelector('input[name="experience"]:checked').value,
+                experienceDetails: document.getElementById('experienceDetails').value,
+                referralSource: document.getElementById('referralSource').value,
+                transport: document.querySelector('input[name="transport"]:checked').value,
+                specialRequirements: document.getElementById('specialRequirements').value,
+                submissionDate: new Date().toISOString(),
+                applicationStatus: 'Pending Assessment',
+                assessmentCompleted: false
+            };
+            
+            let applications = JSON.parse(localStorage.getItem('sozoApplications')) || [];
+            applications.push(formData);
+            localStorage.setItem('sozoApplications', JSON.stringify(applications));
+            localStorage.setItem('currentApplicationId', formData.id);
+            
+            window.location.href = 'assessment.html';
+        });
+    </script>
+</body>
+</html>
